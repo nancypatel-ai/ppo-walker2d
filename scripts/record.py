@@ -1,8 +1,11 @@
 """Record a checkpoint rollout as a local video."""
 
 import argparse
+from pathlib import Path
 
 import gymnasium as gym
+import imageio.v2 as imageio
+import mujoco
 import torch
 
 from ppo_walker2d.config import load_config
@@ -26,17 +29,22 @@ def main() -> None:
         config.training.hidden_sizes,
     )
     policy.load_state_dict(checkpoint["model"])
-    recorded = gym.wrappers.RecordVideo(
-        environment, args.output, episode_trigger=lambda _: True
-    )
-    observation, _ = recorded.reset(seed=config.seed)
-    for _ in range(1000):
+    renderer = mujoco.Renderer(environment.unwrapped.model, height=240, width=420)
+    frames = []
+    observation, _ = environment.reset(seed=config.seed)
+    for _ in range(200):
+        renderer.update_scene(environment.unwrapped.data)
+        frames.append(renderer.render().copy())
         with torch.no_grad():
             action, _ = policy(torch.as_tensor(observation, dtype=torch.float32))
-        observation, _, terminated, truncated, _ = recorded.step(action.numpy())
+        observation, _, terminated, truncated, _ = environment.step(action.numpy())
         if terminated or truncated:
             break
-    recorded.close()
+    environment.close()
+    renderer.close()
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    imageio.mimsave(output.with_suffix(".gif"), frames, duration=0.04, loop=0)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ dependencies = [
   "numpy>=2.0,<3.0",
   "torch>=2.5,<3.0",
   "pyyaml>=6.0,<7.0",
+  "matplotlib>=3.8,<4.0",
 ]
 
 [project.optional-dependencies]
@@ -20,6 +21,12 @@ dev = [
 ]
 demo = [
   "gradio>=5.0,<6.0",
+]
+baselines = [
+  "stable-baselines3>=2.4,<3.0",
+]
+tracking = [
+  "wandb>=0.19,<1.0",
 ]
 
 [tool.pytest.ini_options]
@@ -37,3 +44,4 @@ python_version = "3.11"
 strict = false
 ignore_missing_imports = true
 disable_error_code = ["import-untyped"]
+follow_imports = "skip"

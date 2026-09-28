@@ -26,6 +26,27 @@ def make_env(
     return environment_instance
 
 
+def make_vector_env(
+    environment: str,
+    num_envs: int,
+    seed: int,
+    reward_name: str = "reward_v1",
+    domain_randomization: bool = False,
+) -> Any:
+    """Create a synchronous vector environment with independent seeds."""
+    import gymnasium as gym
+
+    def factory(index: int) -> Any:
+        return lambda: make_env(
+            environment,
+            seed + index,
+            reward_name,
+            domain_randomization,
+        )
+
+    return gym.vector.SyncVectorEnv([factory(index) for index in range(num_envs)])
+
+
 class DomainRandomizationWrapper:
     """Apply deterministic mass and friction perturbations at each reset."""
 

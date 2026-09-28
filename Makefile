@@ -3,12 +3,13 @@
 PYTHON ?= python
 CONFIG ?= configs/base.yaml
 SEED ?= 42
+CHECKPOINT ?= checkpoints/base__seed42.pt
 
 train:
 	$(PYTHON) scripts/train.py --config $(CONFIG) --seed $(SEED)
 
 eval:
-	$(PYTHON) scripts/evaluate.py --config $(CONFIG) --checkpoint $(checkpoint)
+	$(PYTHON) scripts/evaluate.py --config $(CONFIG) --checkpoint $(CHECKPOINT)
 
 test:
 	$(PYTHON) -m pytest
@@ -25,3 +26,6 @@ sweep:
 
 demo:
 	$(PYTHON) scripts/app.py
+
+plot:
+	$(PYTHON) scripts/plot.py

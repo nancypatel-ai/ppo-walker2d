@@ -8,6 +8,7 @@ from typing import Any
 import torch
 
 from ppo_walker2d.config import ProjectConfig, resolve_device
+from ppo_walker2d.logging import JsonlLogger
 from ppo_walker2d.models.actor_critic import ActorCritic
 from ppo_walker2d.ppo.gae import compute_gae
 from ppo_walker2d.ppo.rollout import collect_rollout
@@ -94,12 +95,13 @@ def train(config: ProjectConfig, environment: Any) -> Path:
     observation, _ = environment.reset(seed=config.seed)
     policy = ActorCritic(
         int(observation.shape[-1]),
-        int(environment.action_space.shape[0]),
+        int(environment.action_space.shape[-1]),
         config.training.hidden_sizes,
     ).to(device)
     optimizer = torch.optim.Adam(policy.parameters(), lr=config.training.learning_rate)
     total_steps = 0
     checkpoint = Path("checkpoints") / f"{config.name}__seed{config.seed}.pt"
+    logger = JsonlLogger(Path("outputs") / f"{config.name}__seed{config.seed}.jsonl")
     while total_steps < config.training.total_steps:
         rollout = collect_rollout(
             environment,
@@ -113,8 +115,10 @@ def train(config: ProjectConfig, environment: Any) -> Path:
             _, last_value = policy(
                 torch.as_tensor(observation, dtype=torch.float32, device=device)
             )
-        update_policy(policy, optimizer, rollout, last_value, config)
+        metrics = update_policy(policy, optimizer, rollout, last_value, config)
         total_steps += config.training.rollout_steps
+        logger.write({"step": total_steps, **metrics})
         if total_steps >= config.training.total_steps:
             save_checkpoint(checkpoint, policy, optimizer, config, total_steps)
+    logger.close()
     return checkpoint

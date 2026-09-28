@@ -2,6 +2,8 @@
 
 A reproducible PPO training pipeline for MuJoCo Walker2d.
 
+![Walker2d training preview](assets/hero.gif)
+
 This repository turns CS690K HW1 into a tested, config-driven PPO implementation.
 
 The trainer uses Gymnasium, MuJoCo, and PyTorch. It supports deterministic seeds,

@@ -38,7 +38,7 @@ def evaluate(
             steps += 1
             done = bool(terminated or truncated)
         returns.append(episode_return)
-        distances.append(float(info.get("x_position", 0.0)))
+        distances.append(float(environment.unwrapped.data.qpos[0]))
         speeds.append(distances[-1] / max(steps * 0.002, 1e-8))
         energies.append(energy)
         falls += int(bool(terminated and not info.get("healthy", True)))
