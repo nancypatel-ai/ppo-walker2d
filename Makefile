@@ -8,7 +8,7 @@ train:
 	$(PYTHON) scripts/train.py --config $(CONFIG) --seed $(SEED)
 
 eval:
-	$(PYTHON) scripts/evaluate.py --config $(CONFIG) --seed $(SEED)
+	$(PYTHON) scripts/evaluate.py --config $(CONFIG) --checkpoint $(checkpoint)
 
 test:
 	$(PYTHON) -m pytest

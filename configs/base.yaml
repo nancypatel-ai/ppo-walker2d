@@ -4,3 +4,16 @@ seed: 42
 training:
   total_steps: 1000000
   num_envs: 8
+  rollout_steps: 2048
+  update_epochs: 10
+  minibatch_size: 64
+  learning_rate: 0.0003
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_coef: 0.2
+  entropy_coef: 0.0
+  value_coef: 0.5
+  max_grad_norm: 0.5
+  hidden_sizes: [64, 64]
+  checkpoint_interval: 50000
+  device: auto
