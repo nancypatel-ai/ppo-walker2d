@@ -1,0 +1,4 @@
+name: domain_rand
+environment: Walker2d-v5
+seed: 42
+domain_randomization: true

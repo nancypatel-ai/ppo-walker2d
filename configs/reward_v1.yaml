@@ -1,0 +1,4 @@
+name: reward_v1
+environment: Walker2d-v5
+seed: 42
+reward: reward_v1
