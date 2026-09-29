@@ -20,6 +20,9 @@ steps and two evaluation episodes per seed. Across five seeds it reached a
 mean return of 233.313 plus or minus 89.144. The wide spread and short budget
 make this a pipeline check, not a publishable comparison.
 
+The random-policy R1 lower bound was evaluated for 20 episodes across five
+seeds. Mean return was 0.100 +/- 1.254.
+
 The primary R3 run used 1,000,000 environment steps per seed.
 Evaluation used 20 fixed-seed episodes per policy:
 
@@ -39,6 +42,17 @@ A representative one-million-step R3 run with seed 42 produced mean return
 312.604, mean speed 2.717 m/s, fall rate 1.000, and energy proxy 882.020 over
 20 episodes. It also does not support a successful-walking claim. The
 one-million-step checkpoint is attached to the v0.1.0 GitHub release.
+
+The R4 reward-v2 and R5 domain-randomization runs used 100,000 environment
+steps per seed and 20 evaluation episodes:
+
+| Configuration | Return mean +/- std | Speed mean +/- std | Fall rate mean +/- std |
+|---|---:|---:|---:|
+| R4 reward-v2 | 71.352 +/- 9.885 | -1.187 +/- 0.152 m/s | 1.000 +/- 0.000 |
+| R5 domain-rand | 191.843 +/- 30.355 | -0.818 +/- 0.461 m/s | 1.000 +/- 0.000 |
+
+These runs also fail the walking criterion. Held-out dynamics evaluation has
+not yet been run.
 
 The full matrix still requires long-horizon R1, R2, R4, and R5 runs and three
 seeds per learning-rate setting in S1. Report mean plus or minus standard
