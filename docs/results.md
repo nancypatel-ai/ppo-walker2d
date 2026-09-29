@@ -15,6 +15,11 @@ episodes. These values validate the experiment plumbing only, not convergence:
 | reward_v2 | 5 | 163.429 | 10.459 |
 | domain_rand | 5 | 279.601 | 20.264 |
 
+The bounded external baseline smoke set used Stable-Baselines3 PPO for 256
+steps and two evaluation episodes per seed. Across five seeds it reached a
+mean return of 233.313 plus or minus 89.144. The wide spread and short budget
+make this a pipeline check, not a publishable comparison.
+
 The full matrix still requires long-horizon R1 through R5 runs and three seeds
 per learning-rate setting in S1. Report mean plus or minus standard deviation
 and include the seed count.

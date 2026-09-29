@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+import gymnasium as gym
 import numpy as np
 
 from ppo_walker2d.config import load_config, seed_everything
@@ -56,8 +57,11 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--episodes", type=int, default=20)
     parser.add_argument("--sb3", action="store_true")
+    parser.add_argument("--total-steps", type=int)
     args = parser.parse_args()
     config = load_config(args.config)
+    if args.total_steps is not None:
+        config.training.total_steps = args.total_steps
     seed_everything(args.seed)
     environment = make_env(config.environment, args.seed)
     result = evaluate_random(environment, args.episodes, args.seed)
@@ -72,7 +76,8 @@ def main() -> None:
             from stable_baselines3 import PPO
         except ImportError as error:
             raise SystemExit("Install the baselines extra first.") from error
-        sb3_environment = make_env(config.environment, args.seed)
+        sb3_environment = gym.make(config.environment)
+        sb3_environment.reset(seed=args.seed)
         model = PPO(
             "MlpPolicy",
             sb3_environment,
