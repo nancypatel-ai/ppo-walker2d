@@ -36,7 +36,9 @@ def main() -> None:
         renderer.update_scene(environment.unwrapped.data)
         frames.append(renderer.render().copy())
         with torch.no_grad():
-            action, _ = policy(torch.as_tensor(observation, dtype=torch.float32))
+            action = policy.deterministic_action(
+                torch.as_tensor(observation, dtype=torch.float32)
+            )
         observation, _, terminated, truncated, _ = environment.step(action.numpy())
         if terminated or truncated:
             break

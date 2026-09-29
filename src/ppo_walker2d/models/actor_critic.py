@@ -43,11 +43,29 @@ class ActorCritic(nn.Module):
         mean, _ = self(observations)
         return torch.distributions.Normal(mean, self.log_std.exp())
 
+    def sample_action(
+        self, observations: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Sample a bounded action and its squashed log probability."""
+        distribution = self.distribution(observations)
+        raw_action = distribution.rsample()
+        action = raw_action.tanh()
+        log_probability = distribution.log_prob(raw_action).sum(-1)
+        log_probability -= torch.log(1.0 - action.pow(2) + 1e-6).sum(-1)
+        return action, log_probability, raw_action
+
+    def deterministic_action(self, observations: torch.Tensor) -> torch.Tensor:
+        mean, _ = self(observations)
+        return mean.tanh()
+
     def evaluate_actions(
         self, observations: torch.Tensor, actions: torch.Tensor
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         distribution = self.distribution(observations)
-        log_probability = distribution.log_prob(actions).sum(-1)
+        clipped_actions = actions.clamp(-1.0 + 1e-6, 1.0 - 1e-6)
+        raw_actions = torch.atanh(clipped_actions)
+        log_probability = distribution.log_prob(raw_actions).sum(-1)
+        log_probability -= torch.log(1.0 - clipped_actions.pow(2) + 1e-6).sum(-1)
         entropy = distribution.entropy().sum(-1)
         _, value = self(observations)
         return log_probability, entropy, value

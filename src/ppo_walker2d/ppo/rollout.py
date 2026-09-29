@@ -39,9 +39,7 @@ def collect_rollout(
     for _ in range(steps):
         tensor = torch.as_tensor(current, dtype=torch.float32, device=device)
         with torch.no_grad():
-            distribution = policy.distribution(tensor)
-            action = distribution.sample()
-            log_prob = distribution.log_prob(action).sum(-1)
+            action, log_prob, _ = policy.sample_action(tensor)
             _, value = policy(tensor)
         next_observation, reward, done, truncated, _ = environment.step(
             action.cpu().numpy()

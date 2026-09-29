@@ -28,7 +28,7 @@ def evaluate(
         while not done:
             tensor = torch.as_tensor(observation, dtype=torch.float32)
             with torch.no_grad():
-                action, _ = policy(tensor)
+                action = policy.deterministic_action(tensor)
             action_array = action.numpy()
             observation, reward, terminated, truncated, info = environment.step(
                 action_array

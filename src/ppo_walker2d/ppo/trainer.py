@@ -120,11 +120,27 @@ def train(config: ProjectConfig, environment: Any) -> Path:
                 torch.as_tensor(observation, dtype=torch.float32, device=device)
             )
         metrics = update_policy(policy, optimizer, rollout, last_value, config)
-        total_steps += config.training.rollout_steps
+        parallel_envs = (
+            rollout.rewards.shape[1]
+            if rollout.rewards.ndim > 1
+            else 1
+        )
+        total_steps += config.training.rollout_steps * parallel_envs
         logger.write({"step": total_steps, **metrics})
         wandb_logger.write({"step": total_steps, **metrics})
-        if total_steps >= config.training.total_steps:
+        should_checkpoint = (
+            total_steps % config.training.checkpoint_interval == 0
+            or total_steps >= config.training.total_steps
+        )
+        if should_checkpoint:
             save_checkpoint(checkpoint, policy, optimizer, config, total_steps)
+            save_checkpoint(
+                checkpoint.with_name(checkpoint.stem + "__best.pt"),
+                policy,
+                optimizer,
+                config,
+                total_steps,
+            )
     logger.close()
     wandb_logger.close()
     return checkpoint
