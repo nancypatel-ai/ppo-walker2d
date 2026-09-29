@@ -53,7 +53,7 @@ def collect_rollout(
         )
         values.append(value)
         current = next_observation
-        if np.any(done | truncated):
+        if not hasattr(environment, "num_envs") and bool(done or truncated):
             current, _ = environment.reset()
     return Rollout(
         observations=torch.stack(observations),

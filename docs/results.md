@@ -75,7 +75,10 @@ environment steps per run. Evaluation used five episodes per checkpoint:
 All S1 policies had fall rate 1.000. The sweep therefore selects no validated
 walking hyperparameter.
 
-The requested matrix is now represented by measured R1 through R5 runs and S1.
+The requested matrix is represented by measured R1 through R5 runs and S1,
+but the collector reset correction on 2026-09-29 invalidates those runs as
+final claims. They remain historical measurements until the corrected matrix
+is rerun.
 Budgets differ by configuration: R3 used 1,000,000 steps per seed, while R2,
 R4, R5, and S1 used 100,000 steps per run. Results do not support a claim of
 successful walking.

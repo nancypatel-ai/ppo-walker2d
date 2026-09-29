@@ -31,6 +31,14 @@ This keeps video generation local. macOS CoreGraphics may require an active
 graphics session; Linux CI should use an EGL-capable runtime. The training and
 evaluation paths do not depend on rendering.
 
+## 2026-09-29: Do not reset all vector workers on one termination
+
+Gymnasium vector environments auto-reset terminated workers individually. The
+collector previously reset the entire vector environment when any worker ended,
+which corrupted other workers' trajectories. The collector now only resets a
+non-vector environment explicitly. Earlier matrix results were retained as
+historical evidence but require rerunning for final claims.
+
 ## 2026-09-28: Make W&B and Spaces adapters opt-in
 
 The code exposes an optional W&B logger and a root Spaces entry point, but the
