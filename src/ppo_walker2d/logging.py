@@ -31,10 +31,8 @@ class WandbLogger:
         if project is not None:
             try:
                 import wandb
-            except ImportError as error:
-                raise RuntimeError(
-                    "Install the tracking extra to enable W&B logging."
-                ) from error
+            except ImportError:
+                return
             entity = os.getenv("WANDB_ENTITY")
             self.run = wandb.init(
                 project=project,
