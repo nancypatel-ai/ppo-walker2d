@@ -33,20 +33,19 @@ Evaluation used 20 fixed-seed episodes per policy:
 
 | Metric | Mean | Standard deviation | Seeds |
 |---|---:|---:|---:|
-| Return | 336.263 | 29.639 | 5 |
-| Distance | 1.068 m | 0.223 m | 5 |
-| Speed | 2.693 m/s | 0.781 m/s | 5 |
+| Return | 563.007 | 44.308 | 5 |
+| Distance | 2.365 m | 0.114 m | 5 |
+| Speed | 4.566 m/s | 0.719 m/s | 5 |
 | Fall rate | 1.000 | 0.000 | 5 |
-| Energy proxy | 835.032 | 104.080 | 5 |
+| Energy proxy | 1126.413 | 118.890 | 5 |
 
 The high fall rate means this run does not support a claim of successful
 walking. The result is retained because it validates the corrected bounded
 Gaussian policy and the long-horizon evaluation path.
 
-A representative one-million-step R3 run with seed 42 produced mean return
-312.604, mean speed 2.717 m/s, fall rate 1.000, and energy proxy 882.020 over
-20 episodes. It also does not support a successful-walking claim. The
-one-million-step checkpoint is attached to the v0.1.0 GitHub release.
+A representative pre-correction seed-42 checkpoint produced mean return
+312.604, but it is retained only as a historical release artifact. The
+corrected five-seed result above is the authoritative R3 measurement.
 
 The R4 reward-v2 and R5 domain-randomization runs used 100,000 environment
 steps per seed and 20 evaluation episodes:
@@ -75,10 +74,8 @@ environment steps per run. Evaluation used five episodes per checkpoint:
 All S1 policies had fall rate 1.000. The sweep therefore selects no validated
 walking hyperparameter.
 
-The requested matrix is represented by measured R1 through R5 runs and S1,
-but the collector reset correction on 2026-09-29 invalidates those runs as
-final claims. They remain historical measurements until the corrected matrix
-is rerun.
+The requested matrix is represented by measured R1 through R5 runs and S1.
+The corrected R3 five-seed rerun uses the vector-reset fix from 2026-09-29.
 Budgets differ by configuration: R3 used 1,000,000 steps per seed, while R2,
 R4, R5, and S1 used 100,000 steps per run. Results do not support a claim of
 successful walking.
@@ -86,8 +83,8 @@ successful walking.
 Status: In progress
 Duration: 2026-09-28 to 2026-09-28
 Runs logged: 5 long-horizon R3 runs plus bounded baseline and ablation runs
-Best mean return (R3, 5 seeds): 336.263 +/- 29.639
-Best mean speed (R3, 5 seeds): 2.693 +/- 0.781 m/s
+Best mean return (R3, 5 seeds): 563.007 +/- 44.308
+Best mean speed (R3, 5 seeds): 4.566 +/- 0.719 m/s
 Robustness (R5 vs R3, held-out dynamics): -199.175 nominal return delta
 Reproducibility: smoke verified via direct bounded trainer invocation
 Privacy: no telemetry, no user data, no external runtime calls
