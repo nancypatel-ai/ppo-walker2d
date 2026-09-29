@@ -35,6 +35,11 @@ The high fall rate means this run does not support a claim of successful
 walking. The result is retained because it validates the corrected bounded
 Gaussian policy and the long-horizon evaluation path.
 
+A representative one-million-step R3 run with seed 42 produced mean return
+312.604, mean speed 2.717 m/s, fall rate 1.000, and energy proxy 882.020 over
+20 episodes. It also does not support a successful-walking claim. The
+one-million-step checkpoint is attached to the v0.1.0 GitHub release.
+
 The full matrix still requires long-horizon R1 through R5 runs and three seeds
 per learning-rate setting in S1. Report mean plus or minus standard deviation
 and include the seed count.
