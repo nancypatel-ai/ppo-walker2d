@@ -15,3 +15,4 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: make test
       - run: make lint
+      - run: docker build -t ppo-walker2d:ci .
