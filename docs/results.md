@@ -5,9 +5,19 @@ Walker2d-v5 for 256 environment steps with seed 7 and produced
 `checkpoints/smoke__seed7.pt`. This validates integration only. It is not a
 learning result.
 
-The full matrix requires five seeds for each R1 through R5 run and three seeds
-for each learning-rate setting in S1. Report mean plus or minus standard
-deviation and include the seed count.
+The bounded five-seed integration matrix completed for the three project PPO
+configurations. Each run used 256 environment steps and evaluation used two
+episodes. These values validate the experiment plumbing only, not convergence:
+
+| Configuration | Seeds | Mean return | Standard deviation |
+|---|---:|---:|---:|
+| reward_v1 | 5 | 276.973 | 18.002 |
+| reward_v2 | 5 | 163.429 | 10.459 |
+| domain_rand | 5 | 279.601 | 20.264 |
+
+The full matrix still requires long-horizon R1 through R5 runs and three seeds
+per learning-rate setting in S1. Report mean plus or minus standard deviation
+and include the seed count.
 
 Status: In progress
 Duration: 2026-09-28 to 2026-09-28

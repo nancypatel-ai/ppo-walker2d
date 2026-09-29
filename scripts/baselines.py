@@ -30,11 +30,32 @@ def evaluate_random(environment: Any, episodes: int, seed: int) -> dict[str, flo
     }
 
 
+def evaluate_sb3(
+    model: Any, environment: Any, episodes: int, seed: int
+) -> dict[str, float]:
+    returns: list[float] = []
+    for episode in range(episodes):
+        observation, _ = environment.reset(seed=seed + episode)
+        total = 0.0
+        done = False
+        while not done:
+            action, _ = model.predict(observation, deterministic=True)
+            observation, reward, terminated, truncated, _ = environment.step(action)
+            total += float(reward)
+            done = bool(terminated or truncated)
+        returns.append(total)
+    return {
+        "mean_return": float(np.mean(returns)),
+        "std_return": float(np.std(returns)),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/base.yaml")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--episodes", type=int, default=20)
+    parser.add_argument("--sb3", action="store_true")
     args = parser.parse_args()
     config = load_config(args.config)
     seed_everything(args.seed)
@@ -46,7 +67,26 @@ def main() -> None:
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )
     print(result)
-    print("Install the baselines extra to run the Stable-Baselines3 comparison.")
+    if args.sb3:
+        try:
+            from stable_baselines3 import PPO
+        except ImportError as error:
+            raise SystemExit("Install the baselines extra first.") from error
+        sb3_environment = make_env(config.environment, args.seed)
+        model = PPO(
+            "MlpPolicy",
+            sb3_environment,
+            n_steps=128,
+            batch_size=64,
+            seed=args.seed,
+            verbose=0,
+        )
+        model.learn(total_timesteps=config.training.total_steps)
+        sb3_result = evaluate_sb3(model, sb3_environment, args.episodes, args.seed)
+        sb3_environment.close()
+        print({"sb3": sb3_result})
+    else:
+        print("Install the baselines extra to run the Stable-Baselines3 comparison.")
 
 
 if __name__ == "__main__":
