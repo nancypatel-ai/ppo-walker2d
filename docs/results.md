@@ -20,16 +20,16 @@ steps and two evaluation episodes per seed. Across five seeds it reached a
 mean return of 233.313 plus or minus 89.144. The wide spread and short budget
 make this a pipeline check, not a publishable comparison.
 
-The primary R3 run used 100,000 environment steps per seed.
+The primary R3 run used 1,000,000 environment steps per seed.
 Evaluation used 20 fixed-seed episodes per policy:
 
 | Metric | Mean | Standard deviation | Seeds |
 |---|---:|---:|---:|
-| Return | 184.285 | 32.346 | 5 |
-| Distance | -0.464 m | 0.141 m | 5 |
-| Speed | -1.114 m/s | 0.329 m/s | 5 |
+| Return | 336.263 | 29.639 | 5 |
+| Distance | 1.068 m | 0.223 m | 5 |
+| Speed | 2.693 m/s | 0.781 m/s | 5 |
 | Fall rate | 1.000 | 0.000 | 5 |
-| Energy proxy | 919.972 | 52.555 | 5 |
+| Energy proxy | 835.032 | 104.080 | 5 |
 
 The high fall rate means this run does not support a claim of successful
 walking. The result is retained because it validates the corrected bounded
@@ -40,17 +40,17 @@ A representative one-million-step R3 run with seed 42 produced mean return
 20 episodes. It also does not support a successful-walking claim. The
 one-million-step checkpoint is attached to the v0.1.0 GitHub release.
 
-The full matrix still requires long-horizon R1 through R5 runs and three seeds
-per learning-rate setting in S1. Report mean plus or minus standard deviation
-and include the seed count.
+The full matrix still requires long-horizon R1, R2, R4, and R5 runs and three
+seeds per learning-rate setting in S1. Report mean plus or minus standard
+deviation and include the seed count.
 
 Status: In progress
 Duration: 2026-09-28 to 2026-09-28
 Runs logged: 5 long-horizon R3 runs plus bounded baseline and ablation runs
-Best mean return (R3, 5 seeds): 184.285 +/- 32.346
-Best mean speed (R3, 5 seeds): -1.114 +/- 0.329 m/s
+Best mean return (R3, 5 seeds): 336.263 +/- 29.639
+Best mean speed (R3, 5 seeds): 2.693 +/- 0.781 m/s
 Robustness (R5 vs R3, held-out dynamics): not available
 Reproducibility: smoke verified via direct bounded trainer invocation
 Privacy: no telemetry, no user data, no external runtime calls
-Decisions logged: 7 (see docs/decisions.md)
+Decisions logged: 6 (see docs/decisions.md)
 Open items: full experiment matrix, W&B logging, video assets, Hugging Face deployment
