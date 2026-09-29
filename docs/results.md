@@ -52,18 +52,19 @@ steps per seed and 20 evaluation episodes:
 
 | Configuration | Return mean +/- std | Speed mean +/- std | Fall rate mean +/- std |
 |---|---:|---:|---:|
-| R4 reward-v2 | 71.352 +/- 9.885 | -1.187 +/- 0.152 m/s | 1.000 +/- 0.000 |
-| R5 domain-rand | 191.843 +/- 30.355 | -0.818 +/- 0.461 m/s | 1.000 +/- 0.000 |
+| R4 reward-v2 | 102.872 +/- 20.617 | -0.206 +/- 0.408 m/s | 1.000 +/- 0.000 |
+| R5 domain-rand | 205.739 +/- 16.334 | -0.358 +/- 0.267 m/s | 1.000 +/- 0.000 |
 
-These runs also fail the walking criterion. Held-out dynamics evaluation has
-now been run on three fixed settings, with five seeds and five episodes per
-setting. R5 mean returns were 227.970 +/- 31.402 for low mass and friction,
-137.088 +/- 69.879 for nominal dynamics, and 96.314 +/- 10.536 for high mass
-and friction. Relative to the R3 mean return, the nominal held-out delta was
--199.175.
+These corrected runs also fail the walking criterion. Held-out R5 evaluation
+on the corrected checkpoints produced 238.511 +/- 59.708 for low mass and
+friction, 147.220 +/- 48.948 for nominal dynamics, and 118.962 +/- 14.053 for
+high mass and friction. Relative to the corrected R3 mean return, the nominal
+held-out delta was -415.787.
 
-The S1 learning-rate sweep used three rates, three seeds per rate, and 100,000
-environment steps per run. Evaluation used five episodes per checkpoint:
+The pre-correction S1 learning-rate sweep used three rates, three seeds per
+rate, and 100,000 environment steps per run. Its results are retained as
+historical measurements and should be rerun with the corrected collector.
+Evaluation used five episodes per checkpoint:
 
 | Learning rate | Return mean +/- std | Seeds |
 |---:|---:|---:|
@@ -85,7 +86,7 @@ Duration: 2026-09-28 to 2026-09-28
 Runs logged: 5 long-horizon R3 runs plus bounded baseline and ablation runs
 Best mean return (R3, 5 seeds): 563.007 +/- 44.308
 Best mean speed (R3, 5 seeds): 4.566 +/- 0.719 m/s
-Robustness (R5 vs R3, held-out dynamics): -199.175 nominal return delta
+Robustness (R5 vs R3, held-out dynamics): -415.787 nominal return delta
 Reproducibility: smoke verified via direct bounded trainer invocation
 Privacy: no telemetry, no user data, no external runtime calls
 Decisions logged: 6 (see docs/decisions.md)
