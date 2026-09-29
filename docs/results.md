@@ -61,16 +61,15 @@ friction, 147.220 +/- 48.948 for nominal dynamics, and 118.962 +/- 14.053 for
 high mass and friction. Relative to the corrected R3 mean return, the nominal
 held-out delta was -415.787.
 
-The pre-correction S1 learning-rate sweep used three rates, three seeds per
-rate, and 100,000 environment steps per run. Its results are retained as
-historical measurements and should be rerun with the corrected collector.
-Evaluation used five episodes per checkpoint:
+The corrected S1 learning-rate sweep used three rates, three seeds per rate,
+and 100,000 environment steps per run. Evaluation used five episodes per
+checkpoint:
 
 | Learning rate | Return mean +/- std | Seeds |
 |---:|---:|---:|
-| 0.0001 | 224.809 +/- 30.194 | 3 |
-| 0.0003 | 214.959 +/- 29.302 | 3 |
-| 0.0010 | 208.289 +/- 28.702 | 3 |
+| 0.0001 | 294.227 +/- 16.441 | 3 |
+| 0.0003 | 248.995 +/- 12.985 | 3 |
+| 0.0010 | 232.963 +/- 39.693 | 3 |
 
 All S1 policies had fall rate 1.000. The sweep therefore selects no validated
 walking hyperparameter.
@@ -83,7 +82,7 @@ successful walking.
 
 Status: In progress
 Duration: 2026-09-28 to 2026-09-28
-Runs logged: 5 long-horizon R3 runs plus bounded baseline and ablation runs
+Runs logged: 34 local runs across R1 through R5 and S1; W&B runs: 0
 Best mean return (R3, 5 seeds): 563.007 +/- 44.308
 Best mean speed (R3, 5 seeds): 4.566 +/- 0.719 m/s
 Robustness (R5 vs R3, held-out dynamics): -415.787 nominal return delta
