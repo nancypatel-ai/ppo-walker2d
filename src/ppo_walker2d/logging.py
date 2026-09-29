@@ -20,3 +20,26 @@ class JsonlLogger:
 
     def close(self) -> None:
         self.handle.close()
+
+
+class WandbLogger:
+    """Opt-in W&B adapter that is inert when no project is supplied."""
+
+    def __init__(self, project: str | None, run_name: str) -> None:
+        self.run = None
+        if project is not None:
+            try:
+                import wandb
+            except ImportError as error:
+                raise RuntimeError(
+                    "Install the tracking extra to enable W&B logging."
+                ) from error
+            self.run = wandb.init(project=project, name=run_name, reinit="create_new")
+
+    def write(self, metrics: dict[str, Any]) -> None:
+        if self.run is not None:
+            self.run.log(metrics)
+
+    def close(self) -> None:
+        if self.run is not None:
+            self.run.finish()

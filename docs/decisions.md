@@ -30,3 +30,9 @@ The recorder uses MuJoCo's renderer rather than MoviePy or a hosted service.
 This keeps video generation local. macOS CoreGraphics may require an active
 graphics session; Linux CI should use an EGL-capable runtime. The training and
 evaluation paths do not depend on rendering.
+
+## 2026-09-28: Make W&B and Spaces adapters opt-in
+
+The code exposes an optional W&B logger and a root Spaces entry point, but the
+default trainer remains offline. This avoids silently transmitting metrics.
+Publishing a public W&B project and Space still requires account credentials.

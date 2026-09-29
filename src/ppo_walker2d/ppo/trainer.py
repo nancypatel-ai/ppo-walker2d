@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
 import torch
 
 from ppo_walker2d.config import ProjectConfig, resolve_device
-from ppo_walker2d.logging import JsonlLogger
+from ppo_walker2d.logging import JsonlLogger, WandbLogger
 from ppo_walker2d.models.actor_critic import ActorCritic
 from ppo_walker2d.ppo.gae import compute_gae
 from ppo_walker2d.ppo.rollout import collect_rollout
@@ -102,6 +103,9 @@ def train(config: ProjectConfig, environment: Any) -> Path:
     total_steps = 0
     checkpoint = Path("checkpoints") / f"{config.name}__seed{config.seed}.pt"
     logger = JsonlLogger(Path("outputs") / f"{config.name}__seed{config.seed}.jsonl")
+    wandb_logger = WandbLogger(
+        os.getenv("WANDB_PROJECT"), f"{config.name}__seed{config.seed}"
+    )
     while total_steps < config.training.total_steps:
         rollout = collect_rollout(
             environment,
@@ -118,7 +122,9 @@ def train(config: ProjectConfig, environment: Any) -> Path:
         metrics = update_policy(policy, optimizer, rollout, last_value, config)
         total_steps += config.training.rollout_steps
         logger.write({"step": total_steps, **metrics})
+        wandb_logger.write({"step": total_steps, **metrics})
         if total_steps >= config.training.total_steps:
             save_checkpoint(checkpoint, policy, optimizer, config, total_steps)
     logger.close()
+    wandb_logger.close()
     return checkpoint
