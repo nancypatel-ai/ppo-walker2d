@@ -1,3 +1,9 @@
+---
+title: PPO Walker2d
+sdk: gradio
+app_file: app.py
+---
+
 # ppo-walker2d
 
 A reproducible PPO training pipeline for MuJoCo Walker2d.

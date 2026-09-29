@@ -13,7 +13,7 @@ from ppo_walker2d.models.actor_critic import ActorCritic
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--checkpoint", default="checkpoints/reward_v1__seed42.pt")
     parser.add_argument("--config", default="configs/reward_v1.yaml")
     args = parser.parse_args()
     try:
