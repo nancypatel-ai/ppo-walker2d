@@ -23,6 +23,11 @@ make this a pipeline check, not a publishable comparison.
 The random-policy R1 lower bound was evaluated for 20 episodes across five
 seeds. Mean return was 0.100 +/- 1.254.
 
+The R2 Stable-Baselines3 PPO baseline used 100,000 training steps and 20
+evaluation episodes for each of five seeds. Mean return was 332.125 +/- 75.971.
+This external implementation outperformed the current project policy at the
+same bounded budget, which is an actionable baseline result.
+
 The primary R3 run used 1,000,000 environment steps per seed.
 Evaluation used 20 fixed-seed episodes per policy:
 
@@ -52,19 +57,36 @@ steps per seed and 20 evaluation episodes:
 | R5 domain-rand | 191.843 +/- 30.355 | -0.818 +/- 0.461 m/s | 1.000 +/- 0.000 |
 
 These runs also fail the walking criterion. Held-out dynamics evaluation has
-not yet been run.
+now been run on three fixed settings, with five seeds and five episodes per
+setting. R5 mean returns were 227.970 +/- 31.402 for low mass and friction,
+137.088 +/- 69.879 for nominal dynamics, and 96.314 +/- 10.536 for high mass
+and friction. Relative to the R3 mean return, the nominal held-out delta was
+-199.175.
 
-The full matrix still requires long-horizon R1, R2, R4, and R5 runs and three
-seeds per learning-rate setting in S1. Report mean plus or minus standard
-deviation and include the seed count.
+The S1 learning-rate sweep used three rates, three seeds per rate, and 100,000
+environment steps per run. Evaluation used five episodes per checkpoint:
+
+| Learning rate | Return mean +/- std | Seeds |
+|---:|---:|---:|
+| 0.0001 | 224.809 +/- 30.194 | 3 |
+| 0.0003 | 214.959 +/- 29.302 | 3 |
+| 0.0010 | 208.289 +/- 28.702 | 3 |
+
+All S1 policies had fall rate 1.000. The sweep therefore selects no validated
+walking hyperparameter.
+
+The requested matrix is now represented by measured R1 through R5 runs and S1.
+Budgets differ by configuration: R3 used 1,000,000 steps per seed, while R2,
+R4, R5, and S1 used 100,000 steps per run. Results do not support a claim of
+successful walking.
 
 Status: In progress
 Duration: 2026-09-28 to 2026-09-28
 Runs logged: 5 long-horizon R3 runs plus bounded baseline and ablation runs
 Best mean return (R3, 5 seeds): 336.263 +/- 29.639
 Best mean speed (R3, 5 seeds): 2.693 +/- 0.781 m/s
-Robustness (R5 vs R3, held-out dynamics): not available
+Robustness (R5 vs R3, held-out dynamics): -199.175 nominal return delta
 Reproducibility: smoke verified via direct bounded trainer invocation
 Privacy: no telemetry, no user data, no external runtime calls
 Decisions logged: 6 (see docs/decisions.md)
-Open items: full experiment matrix, W&B logging, video assets, Hugging Face deployment
+Open items: public W&B runs, Hugging Face deployment, real policy demo video, successful walking policy
