@@ -47,6 +47,12 @@ A representative pre-correction seed-42 checkpoint produced mean return
 312.604, but it is retained only as a historical release artifact. The
 corrected five-seed result above is the authoritative R3 measurement.
 
+An extended corrected seed-42 run at 5,000,000 environment steps reached mean
+return 1035.303, mean speed 0.611 m/s, fall rate 0.200, and energy proxy
+2668.760 over 20 episodes. This is evidence that the corrected trainer can
+improve with additional updates, but it is a single-seed diagnostic and not a
+replacement for the five-seed result.
+
 The R4 reward-v2 and R5 domain-randomization runs used 100,000 environment
 steps per seed and 20 evaluation episodes:
 
