@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -34,7 +35,13 @@ class WandbLogger:
                 raise RuntimeError(
                     "Install the tracking extra to enable W&B logging."
                 ) from error
-            self.run = wandb.init(project=project, name=run_name, reinit="create_new")
+            entity = os.getenv("WANDB_ENTITY")
+            self.run = wandb.init(
+                project=project,
+                entity=entity,
+                name=run_name,
+                reinit="create_new",
+            )
 
     def write(self, metrics: dict[str, Any]) -> None:
         if self.run is not None:

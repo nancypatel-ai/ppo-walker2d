@@ -1,0 +1,60 @@
+name: W&B experiments
+
+on:
+  workflow_dispatch:
+    inputs:
+      total_steps:
+        description: "Environment steps per run"
+        required: true
+        default: "100000"
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [base, reward_v1, reward_v2, domain_rand]
+        seed: [1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[tracking]"
+      - name: Train and log run
+        env:
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          WANDB_PROJECT: ${{ vars.WANDB_PROJECT }}
+          WANDB_ENTITY: ${{ vars.WANDB_ENTITY }}
+        run: >-
+          python scripts/train.py
+          --config configs/${{ matrix.config }}.yaml
+          --seed ${{ matrix.seed }}
+          --total-steps ${{ inputs.total_steps }}
+
+  baselines:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        baseline: [random, sb3]
+        seed: [1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[tracking,baselines]"
+      - name: Evaluate baseline and log run
+        env:
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          WANDB_PROJECT: ${{ vars.WANDB_PROJECT }}
+          WANDB_ENTITY: ${{ vars.WANDB_ENTITY }}
+        run: >-
+          python scripts/baselines.py
+          --config configs/base.yaml
+          --seed ${{ matrix.seed }}
+          --episodes 20
+          --total-steps ${{ inputs.total_steps }}
+          ${{ matrix.baseline == 'sb3' && '--sb3' || '' }}

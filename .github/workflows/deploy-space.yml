@@ -1,0 +1,45 @@
+name: Deploy Hugging Face Space
+
+on:
+  workflow_dispatch:
+    inputs:
+      space_id:
+        description: "Hugging Face Space, for example nancypatel-ai/ppo-walker2d"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install huggingface_hub
+      - name: Upload Space repository
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SPACE_ID: ${{ inputs.space_id }}
+        run: |
+          python - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+
+          HfApi(token=os.environ["HF_TOKEN"]).create_repo(
+              repo_id=os.environ["SPACE_ID"],
+              repo_type="space",
+              space_sdk="gradio",
+              exist_ok=True,
+          )
+          HfApi(token=os.environ["HF_TOKEN"]).upload_folder(
+              folder_path=".",
+              repo_id=os.environ["SPACE_ID"],
+              repo_type="space",
+              ignore_patterns=[
+                  ".git/**",
+                  "outputs/**",
+                  "tests/**",
+                  "notebooks/**",
+              ],
+          )
+          PY

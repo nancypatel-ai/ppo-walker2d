@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,7 @@ import numpy as np
 
 from ppo_walker2d.config import load_config, seed_everything
 from ppo_walker2d.envs.wrappers import make_env
+from ppo_walker2d.logging import WandbLogger
 
 
 def evaluate_random(environment: Any, episodes: int, seed: int) -> dict[str, float]:
@@ -66,6 +68,11 @@ def main() -> None:
     environment = make_env(config.environment, args.seed)
     result = evaluate_random(environment, args.episodes, args.seed)
     environment.close()
+    logger = WandbLogger(
+        os.getenv("WANDB_PROJECT"), f"random__seed{args.seed}"
+    )
+    logger.write(result)
+    logger.close()
     Path("outputs").mkdir(exist_ok=True)
     Path("outputs/random_baseline.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
@@ -89,6 +96,11 @@ def main() -> None:
         model.learn(total_timesteps=config.training.total_steps)
         sb3_result = evaluate_sb3(model, sb3_environment, args.episodes, args.seed)
         sb3_environment.close()
+        logger = WandbLogger(
+            os.getenv("WANDB_PROJECT"), f"sb3__seed{args.seed}"
+        )
+        logger.write(sb3_result)
+        logger.close()
         print({"sb3": sb3_result})
     else:
         print("Install the baselines extra to run the Stable-Baselines3 comparison.")

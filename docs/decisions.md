@@ -44,3 +44,10 @@ historical evidence but require rerunning for final claims.
 The code exposes an optional W&B logger and a root Spaces entry point, but the
 default trainer remains offline. This avoids silently transmitting metrics.
 Publishing a public W&B project and Space still requires account credentials.
+
+## 2026-09-29: Publish through manual GitHub workflows
+
+The repository now includes manual workflows for the W&B matrix and Hugging
+Face Space deployment. Secrets remain in GitHub Actions rather than source
+files. This preserves the no-secrets rule while making the account-side steps
+repeatable once the owner adds the required credentials and variables.
