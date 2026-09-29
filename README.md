@@ -41,6 +41,14 @@ on the target machine and reported as mean plus or minus standard deviation.
 The runtime does not collect telemetry or user data. W&B logging is not enabled
 by default. Training works offline after dependencies are installed.
 
+## Optional publishing
+
+The `W&B experiments` GitHub Actions workflow runs the 30-run matrix when the
+repository owner supplies `WANDB_API_KEY` and the `WANDB_PROJECT` and
+`WANDB_ENTITY` repository variables. The `Deploy Hugging Face Space` workflow
+uploads the local demo when the owner supplies `HF_TOKEN` and a Space ID.
+Neither workflow runs automatically.
+
 ## License
 
 MIT
